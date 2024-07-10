@@ -34,7 +34,8 @@ public class JwtService {
         String newAccessToken = jwtProvider.generateToken(user, Duration.ofMinutes(30), List.of("ROLE_USER"));
         String newRefreshToken = jwtProvider.generateToken(user, Duration.ofDays(7), List.of("ROLE_USER"));
 
-        deleteRefreshToken(userId);
+        deleteRefreshToken(userId); // 영속성 컨텍스트에만 반영됨
+        flush(); // 영속성 컨텍스트의 변경 내용을 즉시 데이터베이스에 반영해야됨
         saveRefreshToken(userId, newRefreshToken);
 
         return new LogInResponse(userId, user.getUsername(), newAccessToken, newRefreshToken);

@@ -53,7 +53,8 @@ public class UserService {
         String newAccessToken = newTokens.getAccessToken();
         String newRefreshToken = newTokens.getRefreshToken();
 
-        jwtService.deleteRefreshToken(user.getId());
+        jwtService.deleteRefreshToken(user.getId()); // 영속성 컨텍스트에만 반영됨
+        jwtService.flush(); // 영속성 컨텍스트의 변경 내용을 즉시 데이터베이스에 반영해야됨
         jwtService.saveRefreshToken(user.getId(), newRefreshToken);
 
         return new LogInResponse(user.getId(), user.getNickname(), newAccessToken, newRefreshToken);
