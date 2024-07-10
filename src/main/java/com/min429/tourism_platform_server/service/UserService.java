@@ -53,6 +53,7 @@ public class UserService {
         String newAccessToken = newTokens.getAccessToken();
         String newRefreshToken = newTokens.getRefreshToken();
 
+        jwtService.deleteRefreshToken(user.getId());
         jwtService.saveRefreshToken(user.getId(), newRefreshToken);
 
         return new LogInResponse(user.getId(), user.getNickname(), newAccessToken, newRefreshToken);

@@ -34,6 +34,7 @@ public class JwtService {
         String newAccessToken = jwtProvider.generateToken(user, Duration.ofMinutes(30), List.of("ROLE_USER"));
         String newRefreshToken = jwtProvider.generateToken(user, Duration.ofDays(7), List.of("ROLE_USER"));
 
+        deleteRefreshToken(userId);
         saveRefreshToken(userId, newRefreshToken);
 
         return new LogInResponse(userId, user.getUsername(), newAccessToken, newRefreshToken);
