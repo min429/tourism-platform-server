@@ -41,7 +41,7 @@ jobs:
     - name: Install GitHub CLI
       uses: dev-hanz-ops/install-gh-cli-action@v0.2.0
       with:
-        gh-cli-version: 2.52.0
+        gh-cli-version: '2.52.0'
 
     - name: Create Pull Request
       env:
