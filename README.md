@@ -1,0 +1,1 @@
+[![Auto Merge Branch CI](https://github.com/min429/tourism-platform-server/actions/workflows/auto_merge_ci.yml/badge.svg)](https://github.com/min429/tourism-platform-server/actions/workflows/auto_merge_ci.yml)
