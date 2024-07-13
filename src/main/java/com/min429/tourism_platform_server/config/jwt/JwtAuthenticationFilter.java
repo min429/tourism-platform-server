@@ -17,7 +17,6 @@ import java.io.IOException;
 /**
  *  토큰 검증 및 사용자 인증 정보를 저장하는 필터
  */
-@Slf4j
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
@@ -41,8 +40,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         String authorizationHeader = request.getHeader(HEADER_AUTHORIZATION);
         String token = jwtProvider.getToken(authorizationHeader); // 헤더에서 액세스 토큰 가져옴
-
-        log.info("refreshToken: {}", token);
 
         try {
             jwtProvider.ValidateToken(token);

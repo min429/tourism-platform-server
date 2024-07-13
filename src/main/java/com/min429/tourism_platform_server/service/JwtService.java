@@ -7,6 +7,7 @@ import com.min429.tourism_platform_server.domain.User;
 import com.min429.tourism_platform_server.exception.TokenValidationException;
 import com.min429.tourism_platform_server.repository.RefreshTokenRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,10 +23,11 @@ public class JwtService {
     private final RefreshTokenRepository refreshTokenRepository;
     private final JwtUserDetailsService jwtUserDetailsService;
 
-    public LogInResponse refreshTokens(String token) {
-        RefreshToken refreshToken = refreshTokenRepository.findById(token)
+    public LogInResponse refreshTokens(String authorizationHeader) {
+        RefreshToken refreshToken = refreshTokenRepository.findById(authorizationHeader)
                 .orElseThrow(() -> new TokenValidationException("로그인 필요"));
 
+        String token = jwtProvider.getToken(authorizationHeader); // 헤더에서 액세스 토큰 가져옴
         jwtProvider.ValidateToken(token);
 
         Long userId = refreshToken.getUserId();
