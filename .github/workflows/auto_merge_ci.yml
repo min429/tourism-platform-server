@@ -1,0 +1,31 @@
+name: Auto Merge Branch CI
+
+on:
+  push:
+    branches: [ "**" ]
+
+jobs:
+  auto-merge:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+    - name: Check out the repository
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0  # Ensure full history is fetched for merging
+
+    - name: Set up Git
+      run: |
+        git config --global user.name 'github-actions[bot]'
+        git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+
+    - name: Merge dev into main
+      env:
+        GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
+      run: |
+        git checkout main
+        git pull origin main
+        git merge --no-ff dev
+        git push origin main
