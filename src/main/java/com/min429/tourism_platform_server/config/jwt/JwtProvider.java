@@ -47,7 +47,7 @@ public class JwtProvider {
     }
 
     /** 유효한 토큰인지 검증 (토큰이 유효하면 사용자 인증 완료) **/
-    public void ValidateToken(String token) {
+    public void ValidateToken(String token) { // 검증하려면 token에서 "Bearer " 없어야 됨
         try {
             // 토큰의 서명이 올바른지, 만료되지 않았는지 확인
             Jwts.parser()

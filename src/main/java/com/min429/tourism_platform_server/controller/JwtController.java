@@ -18,8 +18,7 @@ public class JwtController {
 
     @PostMapping("/create")
     public ResponseEntity<LogInResponse> refreshTokens(@RequestHeader("Authorization") String authorizationHeader) {
-        String refreshToken = authorizationHeader.substring("Bearer ".length()); // "Bearer " 제거
         return ResponseEntity.status(HttpStatus.CREATED).
-                body(jwtService.refreshTokens(refreshToken));
+                body(jwtService.refreshTokens(authorizationHeader));
     }
 }
