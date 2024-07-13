@@ -43,15 +43,9 @@ jobs:
       with:
         gh-cli-version: '2.32.0'
 
-    - name: Authenticate GitHub CLI
-      env:
-        GH_TOKEN: ${{ secrets.GIT_TOKEN }}
-      run: |
-        echo "${{ secrets.GIT_TOKEN }}" | gh auth login --with-token
-
     - name: Create or Update Pull Request
       env:
-        GH_TOKEN: ${{ secrets.GIT_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
       run: |
         BASE_BRANCH="main"
         HEAD_BRANCH=$(echo "${GITHUB_REF#refs/heads/}")
