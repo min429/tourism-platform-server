@@ -38,10 +38,10 @@ jobs:
         git config --global user.name 'github-actions[bot]'
         git config --global user.email 'github-actions[bot]@users.noreply.github.com'
 
-    - name: Set up GitHub CLI
-      uses: dawidd6/action-install-gh-cli@v1
+    - name: Install GitHub CLI
+      uses: dev-hanz-ops/install-gh-cli-action@v0.2.0
       with:
-        version: latest
+        gh-cli-version: 'latest'
 
     - name: Create Pull Request
       env:
@@ -54,8 +54,10 @@ jobs:
           # Create a pull request
           gh pr create --base $BASE_BRANCH --head $HEAD_BRANCH --title "Auto merge $HEAD_BRANCH into $BASE_BRANCH" --body "This is an automated PR created by GitHub Actions"
 
+          # Get the pull request number
+          PR_NUMBER=$(gh pr list --head "$HEAD_BRANCH" --base "$BASE_BRANCH" --json number --jq '.[0].number')
+
           # Check if the pull request can be merged
-          PR_NUMBER=$(gh pr view --json number --jq '.number' --head "$HEAD_BRANCH")
           MERGEABLE=$(gh pr view $PR_NUMBER --json mergeable --jq '.mergeable')
           if [[ "$MERGEABLE" == "true" ]]; then
             gh pr merge $PR_NUMBER --merge --admin
