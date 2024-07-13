@@ -2,7 +2,8 @@ name: Auto Merge Branch CI
 
 on:
   push:
-    branches: [ "**" ]
+    branches-ignore:
+      - main # main을 제외한 branch에서만 push 감지
 
 jobs:
   auto-merge:
