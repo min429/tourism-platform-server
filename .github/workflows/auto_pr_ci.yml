@@ -5,7 +5,6 @@ on:
     branches: [ "**" ]
 
 jobs:
-  # 의존성 관련 보안 취약성 경고를 위해 의존성 그래프 생성 및 제출
   dependency-submission:
     runs-on: ubuntu-latest
     permissions:
@@ -43,6 +42,12 @@ jobs:
       with:
         gh-cli-version: '2.32.0'
 
+    - name: Authenticate GitHub CLI
+      env:
+        GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
+      run: |
+        echo "${{ secrets.GIT_TOKEN }}" | gh auth login --with-token
+
     - name: Create or Update Pull Request
       env:
         GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
@@ -65,8 +70,8 @@ jobs:
           # Check if the pull request can be merged
           MERGEABLE=$(gh pr view $PR_NUMBER --json mergeable --jq '.mergeable')
           if [[ "$MERGEABLE" == "true" ]]; then
-            gh pr merge $PR_NUMBER --merge --admin
+            gh pr merge $PR_NUMBER --auto --merge --admin
           else
-            echo "The PR cannot be merged automatically due to conflicts."
+            echo "The PR cannot be merged automatically due to conflicts or required approvals."
           fi
         fi
