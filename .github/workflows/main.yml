@@ -1,0 +1,27 @@
+name: Java CI/CD
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+env:
+  JWT_ISSUER: min429
+  JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}
+
+jobs:
+  build:
+    permissions:
+      contents: read
+    uses: ./.github/workflows/build.yml
+
+  test:
+    permissions:
+      contents: read
+    uses: ./.github/workflows/test.yml
+
+  dependency-submission:
+    permissions:
+      contents: write
+    uses: ./.github/workflows/dependency-submission.yml
