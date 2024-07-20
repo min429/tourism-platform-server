@@ -15,12 +15,12 @@ jobs:
     - name: Check out the repository
       uses: actions/checkout@v4
       with:
-        fetch-depth: 0  # 병합을 위해 전체 history 가져옴
+        fetch-depth: 0 # 병합을 위해 전체 history 가져옴
 
     - name: Set up Git
       run: |
-        git config --global user.name 'github-actions[bot]'
-        git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+        git config --global user.name 'min429'
+        git config --global user.email 'lsm990429@gmail.com'
 
     - name: Merge dev into main
       env:
