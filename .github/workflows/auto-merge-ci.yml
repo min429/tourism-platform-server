@@ -27,16 +27,16 @@ jobs:
         git config --global user.email 'lsm990429@gmail.com'
 
     - name: Set up MySQL
-        uses: mirromutth/mysql-action@v1.1
-        with:
-          host port: 3306
-          container port: 3306
-          character set server: 'utf8mb4'
-          collation server: 'utf8mb4_general_ci'
-          mysql version: '9.0'
-          mysql database: 'tour-platform'
-          mysql user: 'root'
-          mysql password: '1234'
+      uses: mirromutth/mysql-action@v1.1
+      with:
+        host port: 3306
+        container port: 3306
+        character set server: 'utf8mb4'
+        collation server: 'utf8mb4_general_ci'
+        mysql version: '9.0'
+        mysql database: 'tour-platform'
+        mysql user: 'root'
+        mysql password: '1234'
 
     - name: Set up MongoDB
       uses: getong/mongo-action@v1.1
