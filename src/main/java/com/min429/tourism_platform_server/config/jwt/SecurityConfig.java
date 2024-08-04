@@ -20,7 +20,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-@Profile("local")
+@Profile({"local", "test"})
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
