@@ -62,6 +62,12 @@ dependencies {
 	// jpa
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 
+	// thymeleaf
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf:3.3.1'
+
+	// firebase
+	implementation group: 'com.google.firebase', name: 'firebase-admin', version: '9.3.0'
+
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
