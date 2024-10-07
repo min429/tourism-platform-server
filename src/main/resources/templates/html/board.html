@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8"> <!-- 문서의 문자 인코딩을 UTF-8로 설정 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"> <!-- 화면의 크기에 따라 반응형으로 레이아웃을 조정 -->
+    <title>게시판</title>
+    <!-- 부트스트랩 CSS 및 아이콘 링크 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous"> <!-- Bootstrap CSS 링크 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet"> <!-- Bootstrap 아이콘 링크 -->
+    <!-- 구글 폰트 링크 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com"> <!-- Google Fonts에 대한 사전 연결 -->
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> <!-- 폰트 데이터에 대한 사전 연결 및 교차 출처 공유 -->
+    <link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700;800&display=swap" rel="stylesheet"> <!-- Google Fonts에서 Nanum Gothic 폰트 로드 -->
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&family=Nanum+Gothic:wght@400;700;800&display=swap" rel="stylesheet"> <!-- Google Fonts에서 특정 폰트 패밀리 로드 -->
+    <link href="https://fonts.googleapis.com/css2?family=Caveat+Brush&family=Caveat:wght@400..700&family=Nanum+Gothic:wght@400;700;800&display=swap" rel="stylesheet">
+    <style>
+        @font-face {
+            font-family: 'BMHANNAPro';
+            src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_seven@1.0/BMHANNAPro.woff') format('woff');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        @font-face {
+            font-family: 'BMHANNAAir';
+            src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_four@1.0/BMHANNAAir.woff') format('woff');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        @font-face {
+            font-family: 'BMDOHYEON';
+            src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_one@1.0/BMDOHYEON.woff') format('woff');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        .font-dohyeon{
+            font-family: 'BMDOHYEON';
+        }
+
+        html, body { /* HTML 및 body 요소에 대해 */
+            height: 100%; /* 높이를 100%로 설정 (전체 화면에 맞춤) */
+            font-size: 100%; /* 16px */
+            font-family: "Nanum Gothic", sans-serif; /* 폰트를 'Nanum Gothic'로 설정, 대체 폰트는 sans-serif */
+        }
+
+        .font-caveat { /* font-caveat 클래스에 대해 */
+            font-family: "Caveat", sans-serif; /* 폰트를 'Caveat'로 설정, 대체 폰트는 sans-serif */
+        }
+
+        .font-hanna-pro{
+            font-family: "BM Hanna Pro";
+        }
+
+        .font-hanna-air{
+            font-family: "BM Hanna Air";
+        }
+
+        .header {
+            flex-shrink: 0;
+            height: 3.5rem; /* 뷰포트 높이의 20%를 고정 높이로 설정 */
+            display: flex;
+            justify-content: end;
+            align-items: center;
+            background-color: #3c537e; /* 기존의 header-color 대체 */
+        }
+
+        .board-container {
+            flex-grow: 1;
+            overflow-y: auto;
+        }
+
+        .footer {
+            flex-shrink: 0;
+            position: sticky;
+            bottom: 0;
+            width: 100%;
+            height: 3.2rem; /* 뷰포트 높이의 20%를 고정 높이로 설정 */
+            background-color: white;
+            z-index: 1000;
+        }
+
+        .tab { /* tab 클래스에 대해 */
+            width: 100%; /* 너비를 100%로 설정 (화면 전체 너비에 맞춤) */
+            position: sticky; /* 스크롤 시 요소를 상단에 고정시키는 sticky 속성 적용 */
+            top: 0; /* 요소를 화면 상단에 위치시키도록 설정 */
+            z-index: 1000; /* 다른 요소보다 위에 표시되도록 설정 (레이어 순서) */
+        }
+
+        body { /* body 태그에 대해 */
+            -ms-overflow-style: none; /* IE 및 Edge 브라우저에서 스크롤바 숨기기 */
+        }
+
+        .bg-color{
+            background:  #26344f;
+        }
+
+        .header-color{
+            background: #3c537e;
+        }
+
+        .header-color *{
+            background: transparent;
+        }
+
+        .board-color{
+            background: white;
+        }
+
+        .footer-color{
+            background: #d8dfee;
+        }
+
+        .footer-color *{
+            background: transparent;
+        }
+
+        div{
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar { /* Chrome 및 Safari 브라우저에서의 스크롤바 설정 */
+            display: none; /* 스크롤바를 숨김 */
+        }
+
+        .app-title { /* app-title 클래스에 대해 */
+            font-size: 2rem; /* 글자 크기를 2rem으로 설정 */
+            font-weight: 700; /* 글자 두께를 700으로 설정 (굵게) */
+            color: black; /* 글자 색상을 검정색으로 설정 */
+        }
+
+        /* input 요소가 포커스될 때 placeholder를 투명하게 만듭니다. */
+        input:focus::placeholder {
+            color: transparent; /* 투명하게 만들어 사라지는 효과 */
+        }
+
+        .btn-fix{
+            flex-grow: 0;
+            flex-shrink: 0;
+        }
+
+        .operator-box{
+            height: 240px;
+        }
+
+        .user-box{
+            height: 400px;
+        }
+
+        .text-button-color{
+            color: rgba(241, 241, 241, 0.8);
+        }
+
+        .arrow-paging{
+            width: 10px;
+            height: 10px;
+        }
+
+        .body-wrapper{
+            height: auto;
+        }
+    </style>
+</head>
+<body class="m-0 p-0 d-flex flex-column font-hanna-air bg-color"> <!-- body에 margin과 padding을 0으로 설정 -->
+<div class="body-wrapper d-flex flex-column flex-grow-1 bg-color">
+    <div class="header tab header-color d-flex justify-content-between align-items-center"> <!-- header를 font-caveat 클래스로 적용 -->
+        <div class="app-title ms-1 me-1 me-sm-3 fs-1 font-caveat">TUTL</div> <!-- TUTL 텍스트, app-title 스타일 적용, margin 0으로 설정 -->
+
+        <div class="tab d-flex py-1"> <!-- tab 요소, Flexbox 적용, 하단 테두리 추가, padding 0으로 설정, font-caveat 스타일 적용 -->
+            <button id="btn-restaurant" class="btn btn-fix text-white font-hanna-pro p-0 m-1 fs-6">음식점</button> <!-- 버튼 스타일 적용, 너비 100%, 색상 보조색으로 설정 -->
+            <button id="btn-accommodation" class="btn btn-fix text-white font-hanna-pro p-0 m-1 mx-sm-3 fs-6">숙박</button> <!-- 버튼 스타일 적용, 너비 100%, 색상 보조색으로 설정 -->
+            <button id="btn-spot" class="btn btn-fix text-white font-hanna-pro p-0 mx-1 fs-6">관광지</button> <!-- 버튼 스타일 적용, 너비 100%, 색상 보조색으로 설정 -->
+            <div class="d-flex align-items-center flex-grow-1 justify-content-between"> <!-- Flexbox로 세로 중앙 정렬, 너비 확장, 오른쪽 정렬 -->
+                <input type="text" id="search" class="form-control bg-white search-input border-1 border-dark-subtle m-1 m-sm-3" placeholder="🔍 #제주도 #맛집 #성산일출봉"> <!-- 검색 입력 필드, form-control 스타일 적용, border-dark-subtle 및 search-input 스타일 적용 -->
+            </div>
+        </div>
+
+        <button class="close-button btn p-2 ms-1">
+            <img class="x-button opacity-50" src="/assets/icons/x-button.png" alt="close">
+        </button>
+    </div>
+
+    <div class="board-container bg-color d-flex flex-column flex-grow-1 px-3 h-100">
+        <span class="font-hanna-pro fs-4 ms-3 text-white mt-4">운영자's PICK</span>
+
+        <div class="operator-box px-3 overflow-auto border border-0 bg-color"> <!-- Flexbox로 남은 공간 채우기, padding 3 적용 -->
+            <div th:each="thumbnail : ${adminBoardThumbnails}" class="admin-pick custom-card board-color border border-0 rounded-2 my-2 p-2"
+                 th:attr="data-boardId=${thumbnail.boardId}, data-type=${thumbnail.type}, data-area=${thumbnail.area}"
+                 onclick="redirectToDetail(this.getAttribute('data-area'), this.getAttribute('data-boardId'), false, this.getAttribute('data-type'))">
+                <span class="font-dohyeon text-truncate fs-5" th:text="${thumbnail.title}">Title</span>
+            </div>
+        </div>
+
+        <!-- 운영자 페이지네이션 -->
+        <div class="d-flex flex-row align-self-center align-content-center">
+            <!-- 이전 버튼 -->
+            <button class="border border-0 bg-transparent p-0 text-button-color px-1 mx-1 d-flex align-items-center" onClick="updateAdminPageGroup(-1)">
+                <img class="arrow-paging text-button-color" src="/assets/icons/arrow-before.png" alt="previous">
+            </button>
+
+            <!-- 운영자 페이지 번호 버튼들 -->
+            <div id="admin-page-buttons" class="d-flex"></div>
+
+            <!-- 다음 버튼 -->
+            <button class="border border-0 bg-transparent p-0 text-button-color px-1 mx-1 d-flex align-items-center" onClick="updateAdminPageGroup(1)">
+                <img class="arrow-paging text-button-color" src="/assets/icons/arrow-after.png" alt="next">
+            </button>
+        </div>
+
+        <span class="font-hanna-pro fs-4 ms-3 text-white">유저's PICK</span>
+
+        <div class="user-box px-3 overflow-auto border border-0 bg-color"> <!-- Flexbox로 남은 공간 채우기, padding 3 적용 -->
+            <div th:each="thumbnail : ${userBoardThumbnails}" class="user-pick custom-card board-color border border-0 rounded-2 my-2 p-2"
+                 th:attr="data-boardId=${thumbnail.boardId}, data-type=${thumbnail.type}, data-area=${thumbnail.area}"
+                 onclick="redirectToDetail(this.getAttribute('data-area'), this.getAttribute('data-boardId'), true, this.getAttribute('data-type'))">
+                <h5 class="font-dohyeon text-truncate" th:text="${thumbnail.title}">Title</h5>
+                <div class="d-flex justify-content-between board-color">
+                    <!-- 태그는 왼쪽에 정렬 -->
+                    <div class="me-2 flex-shrink-1 text-truncate" style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">
+                        <span th:each="tag : ${thumbnail.tags}" class="text-secondary" th:text="'#' + ${tag} + ' '">#태그</span>
+                    </div>
+
+                    <!-- 닉네임은 오른쪽에 정렬 (절대 안 잘리게) -->
+                    <span class="text-secondary" style="white-space: nowrap; margin-left: auto;" th:text="'by ' + ${thumbnail.nickname}">by 닉네임</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 유저 페이지네이션 -->
+        <div class="d-flex flex-row align-self-center align-content-center mb-4">
+            <!-- 이전 버튼 -->
+            <button class="border border-0 bg-transparent p-0 text-button-color px-1 mx-1 d-flex align-items-center" onClick="updateUserPageGroup(-1)">
+                <img class="arrow-paging text-button-color" src="/assets/icons/arrow-before.png" alt="previous">
+            </button>
+
+            <!-- 유저 페이지 번호 버튼들 -->
+            <div id="user-page-buttons" class="d-flex"></div>
+
+            <!-- 다음 버튼 -->
+            <button class="border border-0 bg-transparent p-0 text-button-color px-1 mx-1 d-flex align-items-center" onClick="updateUserPageGroup(1)">
+                <img class="arrow-paging text-button-color" src="/assets/icons/arrow-after.png" alt="next">
+            </button>
+        </div>
+    </div>
+
+    <div class="footer footer-color d-flex justify-content-between text-center py-0"> <!-- footer 요소, Flexbox로 가로 정렬, 중앙 정렬, 패딩 0, 상단 테두리 설정 -->
+        <div class="flex-fill"> <!-- Flexbox로 모든 항목을 동일한 크기로 설정 -->
+            <button id="favorite-button" class="btn btn-link"> <!-- 링크 스타일의 버튼 -->
+                <i class="bi bi-star text-secondary" style="font-size: 1.5rem;"></i> <!-- 즐겨찾기 아이콘, 크기 1.5rem, 색상 보조색으로 설정 -->
+            </button>
+        </div>
+        <div class="flex-fill"> <!-- Flexbox로 모든 항목을 동일한 크기로 설정 -->
+            <button id="create-button" class="btn btn-link"> <!-- 링크 스타일의 버튼 -->
+                <i class="bi bi-plus-square text-secondary" style="font-size: 1.5rem;"></i> <!-- 추가 아이콘, 크기 1.5rem, 색상 보조색으로 설정 -->
+            </button>
+        </div>
+        <div class="flex-fill"> <!-- Flexbox로 모든 항목을 동일한 크기로 설정 -->
+            <button id="mypage-button" class="btn btn-link"> <!-- 링크 스타일의 버튼 -->
+                <i class="bi bi-person text-secondary" style="font-size: 1.5rem;"></i> <!-- 사용자 아이콘, 크기 1.5rem, 색상 보조색으로 설정 -->
+            </button>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-latest.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+<script type="module" src="/js/board.js"></script>
+<script type="module" src="/js/close.js"></script>
+</body>
+</html>
