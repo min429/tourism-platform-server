@@ -1,12 +1,11 @@
-package com.min429.tourism_platform_server.domain;
+package com.min429.tourism_platform_server.common.domain;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.io.Serializable;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -14,7 +13,7 @@ import java.io.Serializable;
 @Entity
 public class RefreshToken {
 
-    @Id
-    private String refreshToken;
-    private Long userId;
+	@Id
+	private String refreshToken;
+	private Long userId;
 }
