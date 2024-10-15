@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8"> <!-- 문서의 문자 인코딩을 UTF-8로 설정 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"> <!-- 반응형 웹 디자인을 위한 뷰포트 설정 -->
+    <title>새 게시글</title> <!-- 페이지 제목을 '새 게시물'로 설정 -->
+    <script type="module" src="/js/firebase.js"></script>
+    <script type="text/javascript" th:src="'https://oapi.map.naver.com/openapi/v3/maps.js?ncpClientId=' + ${clientId} + '&submodules=panorama,geocoder,drawing,visualization'"></script>
+    <!-- 부트스트랩 CSS 및 아이콘 링크 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous"> <!-- Bootstrap CSS 링크 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet"> <!-- Bootstrap 아이콘 링크 -->
+    <!-- 구글 폰트 링크 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com"> <!-- Google Fonts에 대한 사전 연결 -->
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> <!-- 폰트 데이터에 대한 사전 연결 및 교차 출처 공유 -->
+    <link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700;800&display=swap" rel="stylesheet"> <!-- Google Fonts에서 Nanum Gothic 폰트 로드 -->
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&family=Nanum+Gothic:wght@400;700;800&display=swap" rel="stylesheet"> <!-- Google Fonts에서 특정 폰트 패밀리 로드 -->
+    <link href="https://fonts.googleapis.com/css2?family=Caveat+Brush&family=Caveat:wght@400..700&family=Nanum+Gothic:wght@400;700;800&display=swap" rel="stylesheet">
+    <style>
+        @font-face {
+            font-family: 'BMHANNAPro';
+            src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_seven@1.0/BMHANNAPro.woff') format('woff');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        @font-face {
+            font-family: 'BMHANNAAir';
+            src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_four@1.0/BMHANNAAir.woff') format('woff');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        @font-face {
+            font-family: 'BMDOHYEON';
+            src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_one@1.0/BMDOHYEON.woff') format('woff');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        .font-dohyeon{
+            font-family: 'BMDOHYEON';
+        }
+
+        .font-caveat { /* font-caveat 클래스에 대해 */
+            font-family: "Caveat", sans-serif; /* 폰트를 'Caveat'로 설정, 대체 폰트는 sans-serif */
+        }
+
+        .font-hanna-pro{
+            font-family: "BM Hanna Pro";
+        }
+
+        .font-hanna-air{
+            font-family: "BM Hanna Air";
+        }
+
+        html, body { /* HTML 및 body 요소에 대해 */
+            height: 100%; /* 높이를 100%로 설정 (화면 전체 높이) */
+            font-size: 100%; /* 16px */
+            font-family: "Nanum Gothic", sans-serif; /* 폰트를 'Nanum Gothic'으로 설정, sans-serif 대체 폰트 */
+        }
+
+        body { /* body 요소에 대해 */
+            -ms-overflow-style: none; /* IE 및 Edge 브라우저에서 스크롤바를 숨김 */
+        }
+
+        .bg-color{
+            background:  #26344f;
+        }
+
+        .header-color, .header-color *{
+            background: #3c537e;
+        }
+
+        .board-color{
+            background: white;
+        }
+
+        .footer-color, .footer-color *{
+            background: #d8dfee;
+        }
+
+        div{
+            background: transparent;
+        }
+
+        .header {
+            flex-shrink: 0;
+            height: 3.5rem; /* 뷰포트 높이의 20%를 고정 높이로 설정 */
+            display: flex;
+            justify-content: end;
+            align-items: center;
+            background-color: #3c537e; /* 기존의 header-color 대체 */
+        }
+
+        .board-container {
+            flex-grow: 1;
+            overflow-y: auto;
+        }
+
+        .footer {
+            flex-shrink: 0;
+            position: sticky;
+            bottom: 0;
+            width: 100%;
+            height:3.2rem; /* 뷰포트 높이의 20%를 고정 높이로 설정 */
+            z-index: 1000;
+        }
+
+        ::-webkit-scrollbar { /* Chrome 및 Safari 브라우저에서의 스크롤바 설정 */
+            display: none; /* 스크롤바를 숨김 */
+        }
+
+        .tab { /* tab 클래스에 대해 */
+            width: 100%; /* 너비를 100%로 설정 (화면 전체 너비에 맞춤) */
+            position: sticky; /* 스크롤 시 요소를 상단에 고정시키는 sticky 속성 적용 */
+            top: 0; /* 요소를 화면 상단에 위치시키도록 설정 */
+            z-index: 1000; /* 다른 요소보다 위에 표시되도록 설정 (레이어 순서) */
+        }
+
+        textarea { /* textarea 요소에 대해 */
+            overflow-y: scroll; /* 수직 스크롤바를 항상 표시 */
+            -ms-overflow-style: auto; /* IE 및 Edge에서 스크롤바 표시 */
+            scrollbar-width: auto; /* Firefox에서 스크롤바 너비를 자동으로 설정 */
+            resize: none; /* textarea 크기 조절 핸들을 비활성화 */
+        }
+
+        textarea::-webkit-scrollbar { /* Chrome 및 Safari 브라우저에서의 textarea 스크롤바 설정 */
+            display: block; /* 스크롤바를 표시 */
+            width: 8px; /* 스크롤바 너비를 12px로 설정 */
+        }
+
+        textarea::-webkit-scrollbar-thumb { /* Chrome 및 Safari 브라우저에서의 스크롤바 핸들 설정 */
+            background-color: #cccccc; /* 스크롤바 핸들 색상을 회색(#cccccc)으로 설정 */
+            border-radius: 10px; /* 스크롤바 핸들을 10px 둥글게 설정 */
+        }
+
+        textarea::-webkit-scrollbar-track { /* Chrome 및 Safari 브라우저에서의 스크롤바 트랙 설정 */
+            background-color: #f1f1f1; /* 스크롤바 트랙 색상을 밝은 회색(#f1f1f1)으로 설정 */
+        }
+
+        .image-x-button{ /* 어두운 스타일의 버튼, 절대 위치, 이미지 위쪽 오른쪽에 배치, 크기 20px, 원형 설정 */
+            transform: translate(40%, -50%);
+            width: 20px;
+            height: 20px;
+        }
+
+        /* input 요소가 포커스될 때 placeholder를 투명하게 만듭니다. */
+        input:focus::placeholder {
+            color: transparent; /* 투명하게 만들어 사라지는 효과 */
+        }
+
+        /* input 요소가 포커스될 때 placeholder를 투명하게 만듭니다. */
+        textarea:focus::placeholder {
+            color: transparent; /* 투명하게 만들어 사라지는 효과 */
+        }
+
+        .detail-images {
+            height: 70px;
+            padding: 0px;
+        }
+
+        .detail-image-thumbnail {
+            height: 70px;
+            width: 70px;
+        }
+
+        .text-input-color::placeholder{
+            color: rgba(241, 241, 241, 0.8);
+        }
+    </style>
+</head>
+<body class="m-0 p-0 d-flex flex-column min-vh-100 font-hanna-air bg-color"> <!-- Flexbox로 세로 방향 배치, 최소 높이를 100vh로 설정 (화면 전체 높이의 100%) -->
+<div class="body-wrapper d-flex flex-column flex-grow-1 bg-color">
+    <div class="header tab header-color d-flex justify-content-end align-items-center">
+        <p class="position-absolute top-50 start-50 translate-middle font-dohyeon fs-5 text-white">새 게시글</p>
+        <button class="close-button btn p-2 ms-1">
+            <img class="x-button opacity-50" src="/assets/icons/x-button.png" alt="close">
+        </button>
+    </div>
+
+    <div class="board-container d-flex flex-column flex-grow-1 px-3 bg-color h-100 my-3">
+        <div class="flex-grow-1 px-3 pb-3 bg-color"> <!-- Flexbox로 남은 공간 채우기, padding 3 적용 -->
+            <div class="mt-3 bg-color d-flex flex-row">
+                <button id="attach-photo" class="btn border-1 border-dark-subtle rounded-2 btn-light w-100 me-1">
+                    <i class="bi bi-camera"></i> 사진 첨부하기
+                </button>
+                <button id="select-photo" class="btn border-1 border-dark-subtle rounded-2 btn-light w-100 ms-1">
+                    <i class="bi bi-image"></i> 사진 가져오기
+                </button>
+            </div>
+
+            <div id="image-preview" class="review-images d-flex mb-4 bg-color overflow-x-scroll overflow-visible pt-3">
+                <!-- 이미지를 추가할 공간 -->
+            </div>
+
+            <div class="bg-color text-white">카테고리 선택</div>
+
+            <div class="mt-2 mb-4 bg-color d-flex flex-row">
+                <button id="spot-button" class="btn border-1 border-dark-subtle rounded-2 btn-light w-100 me-1">관광지</button>
+                <button id="restaurant-button" class="btn border-1 border-dark-subtle rounded-2 btn-light w-100 me-1">음식점</button>
+                <button id="accommodation-button" class="btn border-1 border-dark-subtle rounded-2 btn-light w-100 me-1">숙박</button>
+            </div>
+
+            <div class="bg-color text-white">게시글 작성</div>
+
+            <div class="mb-2">
+                <input id="title-input" class="font-dohyeon small w-100 border border-0 border-bottom bg-transparent text-input-color fs-4 text-white" placeholder="제목을 입력해주세요.">
+            </div>
+
+            <div class="mb-3 bg-color">
+                <textarea id="description" class="form-control-sm border border-2 rounded-2 w-100 fs-6" rows="15" placeholder="이 게시물에 대해 설명해주세요."></textarea>
+            </div>
+
+            <div class="bg-color text-white">태그 등록</div>
+
+            <div class="mb-2">
+                <input id="tag-input" class="small w-100 border border-0 border-bottom bg-transparent text-input-color text-white" placeholder="# 키워드를 입력해주세요." onkeypress="addTag(event)">
+            </div>
+
+            <div id="tag-list" class="mb-4 d-flex flex-nowrap bg-color overflow-auto">
+                <!-- 태그를 추가할 공간 -->
+            </div>
+
+            <div class="bg-color">
+                <button id="register-address" class="btn border-dark-subtle btn-light w-100 mb-3">
+                    <i class="bi bi-geo-alt"></i> 주소 등록
+                </button>
+                <div id="map-preview" class="ratio ratio-16x9 h-50 bg-color border border-0 rounded-2">
+                    <!-- 네이버 지도를 표시할 영역 -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer footer-color"> <!-- footer 요소 설정 -->
+        <button id="submit-post" class="btn btn-secondary w-100 border-0 rounded-0 btn-lg text-secondary fs-4">작성 완료</button> <!-- 버튼을 전체 너비로 설정, 모서리 직각으로 설정, 크기를 크게 설정, '완료' 텍스트 표시 -->
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-latest.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+<script type="module" src="/js/board-new.js"></script>
+<script type="module" src="/js/close.js"></script>
+</body>
+</html>

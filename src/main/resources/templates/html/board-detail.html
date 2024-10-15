@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8"> <!-- 문서의 문자 인코딩을 UTF-8로 설정 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"> <!-- 화면의 크기에 따라 반응형으로 레이아웃을 조정 -->
+    <title>게시글</title>
+    <!-- 부트스트랩 CSS 및 아이콘 링크 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <!-- Bootstrap CSS 링크 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- Bootstrap 아이콘 링크 -->
+    <!-- 구글 폰트 링크 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com"> <!-- Google Fonts에 대한 사전 연결 -->
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> <!-- 폰트 데이터에 대한 사전 연결 및 교차 출처 공유 -->
+    <link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700;800&display=swap" rel="stylesheet">
+    <!-- Google Fonts에서 Nanum Gothic 폰트 로드 -->
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&family=Nanum+Gothic:wght@400;700;800&display=swap"
+          rel="stylesheet"> <!-- Google Fonts에서 특정 폰트 패밀리 로드 -->
+    <link href="https://fonts.googleapis.com/css2?family=Caveat+Brush&family=Caveat:wght@400..700&family=Nanum+Gothic:wght@400;700;800&display=swap"
+          rel="stylesheet">
+    <!-- Swiper CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <style>
+        @font-face {
+            font-family: 'BMHANNAPro';
+            src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_seven@1.0/BMHANNAPro.woff') format('woff');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        @font-face {
+            font-family: 'BMHANNAAir';
+            src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_four@1.0/BMHANNAAir.woff') format('woff');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        @font-face {
+            font-family: 'BMDOHYEON';
+            src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_one@1.0/BMDOHYEON.woff') format('woff');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        .font-dohyeon {
+            font-family: 'BMDOHYEON';
+        }
+
+        html, body { /* HTML 및 body 요소에 대해 */
+            height: 100%; /* 높이를 100%로 설정 (전체 화면에 맞춤) */
+            font-size: 100%; /* 16px */
+            font-family: "Nanum Gothic", sans-serif; /* 폰트를 'Nanum Gothic'로 설정, 대체 폰트는 sans-serif */
+        }
+
+        .font-caveat { /* font-caveat 클래스에 대해 */
+            font-family: "Caveat", sans-serif; /* 폰트를 'Caveat'로 설정, 대체 폰트는 sans-serif */
+        }
+
+        .font-hanna-pro {
+            font-family: "BM Hanna Pro";
+        }
+
+        .font-hanna-air {
+            font-family: "BM Hanna Air";
+        }
+
+        .header {
+            flex-shrink: 0;
+            height: 3.5rem; /* 뷰포트 높이의 20%를 고정 높이로 설정 */
+            display: flex;
+            justify-content: end;
+            align-items: center;
+            background-color: #3c537e; /* 기존의 header-color 대체 */
+        }
+
+        .tab { /* tab 클래스에 대해 */
+            width: 100%; /* 너비를 100%로 설정 (화면 전체 너비에 맞춤) */
+            position: sticky; /* 스크롤 시 요소를 상단에 고정시키는 sticky 속성 적용 */
+            top: 0; /* 요소를 화면 상단에 위치시키도록 설정 */
+            z-index: 1000; /* 다른 요소보다 위에 표시되도록 설정 (레이어 순서) */
+        }
+
+        body { /* body 태그에 대해 */
+            -ms-overflow-style: none; /* IE 및 Edge 브라우저에서 스크롤바 숨기기 */
+        }
+
+        .bg-color {
+            background: #26344f;
+        }
+
+        .header-color {
+            background: #3c537e;
+        }
+
+        .header-color * {
+            background: transparent;
+        }
+
+        .board-color {
+            background: white;
+        }
+
+        .footer-color * {
+            background: transparent;
+        }
+
+        div {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar { /* Chrome 및 Safari 브라우저에서의 스크롤바 설정 */
+            display: none; /* 스크롤바를 숨김 */
+        }
+
+        .app-title { /* app-title 클래스에 대해 */
+            font-size: 2rem; /* 글자 크기를 2rem으로 설정 */
+            font-weight: 700; /* 글자 두께를 700으로 설정 (굵게) */
+            color: black; /* 글자 색상을 검정색으로 설정 */
+        }
+
+        /* input 요소가 포커스될 때 placeholder를 투명하게 만듭니다. */
+        input:focus::placeholder {
+            color: transparent; /* 투명하게 만들어 사라지는 효과 */
+        }
+
+        .btn-fix {
+            flex-grow: 0;
+            flex-shrink: 0;
+        }
+
+        .detail-image-thumbnail {
+            height: 70px;
+            width: 70px;
+        }
+
+        #detail-images {
+            height: 70px;
+            padding: 0px;
+        }
+
+        .custom-card {
+            overflow: hidden;
+        }
+
+        .board-container {
+            height: 73vh;
+        }
+
+        .text-button-color{
+            color: rgba(241, 241, 241, 0.8);
+        }
+
+        .tags{
+            display: flex;
+            flex-wrap: wrap; /* 요소들이 줄바꿈되도록 설정 */
+            justify-content: start; /* 태그들이 오른쪽 정렬되도록 설정 */
+        }
+    </style>
+</head>
+
+<body class="m-0 p-0 d-flex flex-column font-hanna-air bg-color"> <!-- body에 margin과 padding을 0으로 설정 -->
+
+<!-- Swiper 모달 -->
+<div class="modal fade" id="imageModal" tabindex="-1" role="dialog" aria-labelledby="imageModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered d-flex justify-content-center align-items-center">
+        <div id="modalContent" class="modal-content border-0 bg-transparent d-flex justify-content-center align-items-center"
+             style="max-height: 80vh; max-width: 80vw;">
+            <div class="modal-body d-flex justify-content-center align-items-center p-0"
+                 style="max-height: 80vh; max-width: 80vw;">
+                <!-- Swiper 슬라이더 -->
+                <div class="swiper mySwiper">
+                    <div class="swiper-wrapper" id="swiperWrapper">
+                        <!-- 여기서 JavaScript로 슬라이드들을 동적으로 추가합니다 -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="body-wrapper d-flex flex-column flex-grow-1 bg-color">
+    <div class="header tab header-color d-flex justify-content-end align-items-center">
+        <p class="position-absolute top-50 start-50 translate-middle font-dohyeon fs-5 text-white">게시글</p>
+        <button class="close-button btn p-2 ms-1">
+            <img class="x-button opacity-50" src="/assets/icons/x-button.png" alt="close">
+        </button>
+    </div>
+
+    <!-- 이미지 목록 -->
+    <div class="image-container mx-1 mt-1 px-1 pt-1">
+        <div th:if="${#lists.size(boardDetail.images) > 0}" id="detail-images" class="d-flex bg-color mt-4 mb-1 mx-4 overflow-x-scroll p-0">
+            <div th:each="image : ${boardDetail.images}" class="detail-image-thumbnail me-2 bg-color">
+                <!-- 각 이미지에 대해 반복: 클릭 시 모달에 이미지 표시 -->
+                <img th:src="${image}" class="rounded" style="width:70px; height:70px;" type="button"
+                     data-bs-toggle="modal" data-bs-target="#imageModal" alt="Image" onclick="showImageModal(this)">
+            </div>
+        </div>
+    </div>
+
+    <div class="ms-4 ps-2 mt-2">
+        <button id="map-button" class="border border-0 bg-transparent text-button-color p-0"
+                th:attr="data-addr=${boardDetail.addr1}"
+                onclick="goToMap(this.getAttribute('data-addr'))">지도 보기</button>
+    </div>
+
+    <div class="board-container bg-color px-2 d-flex flex-grow-1 mb-4">
+        <div class="content px-4 border border-0 bg-color d-flex flex-grow-1 flex-column mb-1">
+            <div class="custom-card d-flex flex-grow-1 flex-column overflow-y-auto board-color border border-0 rounded-2 my-2 p-2">
+                <div class="ms-1 mt-1">
+                    <h5 id="detail.title" class="font-dohyeon" th:text="${boardDetail.title}">Title</h5>
+
+                    <!-- overview와 title 간 거리 유지 -->
+                    <div class="flex-grow-1">
+                        <span id="detail.overview" th:text="${boardDetail.overview}">내용</span>
+                    </div>
+                </div>
+
+                <!-- footer를 하단에 고정 -->
+                <footer class="mt-auto">
+                    <div class="tags board-color" th:if="${boardDetail.tags != null}">
+                        <span class="text-secondary me-2" th:each="tag : ${boardDetail.tags}" th:text="'#' + ${tag}">
+                            #제주도 #좋아요
+                        </span>
+                    </div>
+                    <div class="board-color justify-content-end me-1" th:if="${boardDetail.nickname != null}">
+                        <span class="text-secondary" th:text="|by ${boardDetail.nickname}|">by 이지형수님</span>
+                    </div>
+                </footer>
+            </div>
+
+            <div class="align-self-end">
+                <button id="edit-button" class="border border-0 bg-transparent text-button-color p-0">수정</button>
+                <button id="delete-button" class="border border-0 bg-transparent text-button-color p-0">삭제</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-latest.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+<!-- Swiper JS -->
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<script type="module" src="/js/close.js"></script>
+<script src="/js/board-detail.js"></script>
+</body>
+</html>

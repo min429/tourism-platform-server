@@ -53,6 +53,9 @@ dependencies {
 	// 개발 환경에서 사용하는 mysql
 	runtimeOnly 'com.mysql:mysql-connector-j'
 
+	// P6spy
+	implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.9.0'
+
 	// 개발 환경에서 사용하는 mongodb
 	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
 
