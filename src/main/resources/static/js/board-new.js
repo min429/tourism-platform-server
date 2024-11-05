@@ -12,57 +12,47 @@ $(document).ready(function () {
 
     // 사진 첨부하기 (카메라 촬영)
     $("#attach-photo").on("click", function () {
-        let fileInput = $('<input type="file" accept="image/*" capture="camera">');  // 카메라 촬영을 위한 input 생성
-        fileInput.trigger('click');  // 파일 선택 창을 띄움
-
-        // 파일이 선택되면 처리
-        fileInput.on("change", function (event) {
-            const file = event.target.files[0];
-            if (file) {
-                addImagePreview(file);
-            }
-        });
+        // Unity에 카메라 열기 요청을 보냄
+        if (window.Unity) {
+            window.Unity.call('openCamera');  // Unity의 카메라 열기 로직 호출
+        }
     });
 
     // 사진 가져오기 (갤러리에서 선택)
     $("#select-photo").on("click", function () {
-        let fileInput = $('<input type="file" accept="image/*" multiple>');  // 여러 이미지를 선택할 수 있도록 설정
-        fileInput.trigger('click');
-
-        fileInput.on("change", function (event) {
-            let files = event.target.files;
-            for (let i = 0; i < files.length; i++) {
-                const file = files[i];
-                if (!selectedImages.includes(file)) {  // 중복 이미지 방지
-                    addImagePreview(file);
-                }
-            }
-        });
+        // Unity에 갤러리 열기 요청을 보냄
+        if (window.Unity) {
+            window.Unity.call('openGallery');  // Unity의 갤러리 열기 로직 호출
+        }
     });
 
+    // Unity에서 선택한 이미지 추가 (Unity에서 Base64 이미지 데이터를 전달할 때 호출)
+    window.addImageFromUnity = function (base64ImageData) {
+        if (base64ImageData) {
+            // Base64로 인코딩된 이미지 데이터를 미리보기에 추가
+            addImagePreview(base64ImageData);
+        }
+    };
+
     // 이미지 추가 기능
-    function addImagePreview(file) {
-        let reader = new FileReader();  // FileReader 객체 생성
-        reader.onload = function (e) {
-            let imgElement = $(`
-                <div class="review-image-thumbnail position-relative me-2 bg-color">
-                    <img class="rounded" src="${e.target.result}" alt="Image" style="width: 100px; height: 100px;">
-                    <button class="image-x-button btn position-absolute top-0 end-0 p-0">
-                        <img src="/assets/icons/image-x-button.png" style="width: 18px; height: 18px;">
-                    </button>
-                </div>
-            `);
+    function addImagePreview(base64ImageData) {
+        let imgElement = $(`
+            <div class="review-image-thumbnail position-relative me-2 bg-color">
+                <img class="rounded" src="${base64ImageData}" alt="Image" style="width: 100px; height: 100px;">
+                <button class="image-x-button btn position-absolute top-0 end-0 p-0">
+                    <img src="/assets/icons/image-x-button.png" style="width: 18px; height: 18px;">
+                </button>
+            </div>
+        `);
 
-            // X 버튼 클릭 시 이미지 삭제
-            imgElement.find("button").on("click", function () {
-                imgElement.remove();
-                selectedImages = selectedImages.filter(img => img !== file);  // 배열에서 제거
-            });
+        // X 버튼 클릭 시 이미지 삭제
+        imgElement.find("button").on("click", function () {
+            imgElement.remove();
+            selectedImages = selectedImages.filter(img => img !== base64ImageData);  // 배열에서 제거
+        });
 
-            $("#image-preview").append(imgElement);
-        };
-        reader.readAsDataURL(file);  // 파일을 읽어와 미리보기
-        selectedImages.push(file);  // 배열에 이미지 추가
+        $("#image-preview").append(imgElement);
+        selectedImages.push(base64ImageData);  // 배열에 이미지 추가
     }
 
     // 카테고리 버튼 클릭 시 선택 처리
@@ -209,9 +199,10 @@ $(document).ready(function () {
             formData.append("tags", tag);
         });
 
-        // 선택된 이미지들 추가
-        selectedImages.forEach((image, index) => {
-            formData.append("images", image);  // 파일을 FormData에 직접 추가
+        // Base64 데이터를 Blob으로 변환 후 FormData에 추가
+        selectedImages.forEach((base64Image, index) => {
+            let blob = base64ToBlob(base64Image);
+            formData.append("images", blob, `image${index}.png`);
         });
 
         // 폼 데이터를 서버로 전송
@@ -221,15 +212,22 @@ $(document).ready(function () {
             data: formData,
             contentType: false,
             processData: false,
-            success: function (response) {
-                if (response.redirectUrl) {
-                    window.history.back();
-                }
+            success: function () {
+                window.history.back();
             },
             error: function (error) {
-                // 전송 실패 시 처리
                 console.error('Error creating post', error);
             }
         });
     });
+
+    function base64ToBlob(base64Image) {
+        let byteString = atob(base64Image.split(',')[1]);
+        let arrayBuffer = new ArrayBuffer(byteString.length);
+        let uint8Array = new Uint8Array(arrayBuffer);
+        for (let i = 0; i < byteString.length; i++) {
+            uint8Array[i] = byteString.charCodeAt(i);
+        }
+        return new Blob([uint8Array], { type: 'image/png' });
+    }
 });
