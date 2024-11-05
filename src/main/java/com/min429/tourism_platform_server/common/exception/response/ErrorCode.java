@@ -19,6 +19,7 @@ public enum ErrorCode {
 	USER_NOT_FOUND(ErrorConstant.NOT_FOUND, "USER-001", "존재하지 않는 회원입니다."),
 	USER_ACCESS_DENIED(ErrorConstant.FORBIDDEN, "USER-002", "접근 권한이 없습니다."),
 	USER_NOT_APPROVED(ErrorConstant.UNAUTHORIZED, "USER-003", "인증되지 않은 유저입니다."),
+	USER_ALREADY_EXISTS(ErrorConstant.BAD_REQUEST, "USER-004", "이미 존재하는 유저입니다."),
 
 	// 토큰
 	INVALID_TOKEN(ErrorConstant.UNAUTHORIZED, "TOKEN-001", "유효하지 않은 토큰입니다."),

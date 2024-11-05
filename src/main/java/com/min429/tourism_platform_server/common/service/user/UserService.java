@@ -30,7 +30,7 @@ public class UserService {
 	public void save(SignUpRequest signUpRequest) {
 		Optional<User> user = userRepository.findByEmail(signUpRequest.getEmail());
 		if (user.isPresent()) {
-			throw new UserEmailException(ErrorCode.USER_NOT_FOUND);
+			throw new UserEmailException(ErrorCode.USER_ALREADY_EXISTS);
 		}
 		userRepository.save(User.builder()
 			.email(signUpRequest.getEmail())
